@@ -4,7 +4,7 @@
 ## Notes: Paladin skin for the default UI — gold chrome, holy seal, Holy/Prot/Ret palettes.
 ## Notes-frFR: Patte Paladin sur l’UI de base — chrome or, sceau sacré, palettes Sacré / Prot / Vindicte.
 ## Author: lesgloutonnes
-## Version: 0.2.0
+## Version: 0.2.1
 ## SavedVariables: LumiereUIDB
 ## LoadSavedVariablesFirst: 1
 ## DefaultState: enabled

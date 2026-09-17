@@ -1,30 +1,20 @@
 local ADDON_NAME, ns = ...
 local L = ns.L
 
-local defaults = {
-    enabled = true,
-    variant = "auto",
-    unitFrames = true,
-    actionBars = true,
-    minimap = true,
-    chat = true,
-    tooltips = true,
-    castBars = true,
-    windows = true,
-    gryphons = true,
-    crest = true,
-    onlyPaladin = false,
-    splash = true,
-}
+local function DefaultFor(key)
+    local db = LumiereUIDB and LumiereUIDB[key]
+    if db ~= nil then
+        return db
+    end
+    local defaults = ns.defaults or {}
+    if defaults[key] ~= nil then
+        return defaults[key]
+    end
+    return false
+end
 
 local function Checkbox(category, key, name, desc)
-    local defaultValue = LumiereUIDB[key]
-    if defaultValue == nil then
-        defaultValue = defaults[key]
-        if defaultValue == nil then
-            defaultValue = false
-        end
-    end
+    local defaultValue = DefaultFor(key)
     local varType = (Settings.VarType and Settings.VarType.Boolean) or type(true)
     local setting = Settings.RegisterAddOnSetting(
         category,
@@ -36,9 +26,15 @@ local function Checkbox(category, key, name, desc)
         defaultValue
     )
     Settings.CreateCheckbox(category, setting, desc)
-    setting:SetValueChangedCallback(function()
+    setting:SetValueChangedCallback(function(_, value)
+        if value ~= nil then
+            LumiereUIDB[key] = value
+        end
         if ns.addon then
             ns.addon:ScheduleApply(0.05)
+        end
+        if ns.addon and ns.addon.settingsReady then
+            print("|cfff58cbaLumièreUI|r " .. (L.APPLIED or "skin mis à jour."))
         end
     end)
     return setting
@@ -59,7 +55,10 @@ function ns.InitSettings(addon)
 
     Checkbox(category, "enabled", L.ENABLE, L.ENABLE_DESC)
 
-    local variantDefault = LumiereUIDB.variant or "auto"
+    local variantDefault = DefaultFor("variant")
+    if type(variantDefault) ~= "string" then
+        variantDefault = "auto"
+    end
     local variantType = (Settings.VarType and Settings.VarType.String) or "string"
     local variantSetting = Settings.RegisterAddOnSetting(
         category,
@@ -81,8 +80,14 @@ function ns.InitSettings(addon)
     if Settings.CreateDropdown then
         Settings.CreateDropdown(category, variantSetting, VariantOptions, L.VARIANT_DESC)
     end
-    variantSetting:SetValueChangedCallback(function()
+    variantSetting:SetValueChangedCallback(function(_, value)
+        if value ~= nil then
+            LumiereUIDB.variant = value
+        end
         addon:ScheduleApply(0.05)
+        if addon.settingsReady then
+            print("|cfff58cbaLumièreUI|r " .. L.VARIANT .. ": " .. tostring(LumiereUIDB.variant))
+        end
     end)
 
     Checkbox(category, "unitFrames", L.UNITFRAMES, L.UNITFRAMES_DESC)

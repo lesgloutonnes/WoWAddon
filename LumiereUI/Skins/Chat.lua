@@ -5,6 +5,17 @@ local skin = { setting = "chat" }
 
 function skin:Apply()
     local n = NUM_CHAT_WINDOWS or 10
+    local chrome = ns.Color("chrome")
+    local parts = {
+        "TopLeftTexture",
+        "TopRightTexture",
+        "BottomLeftTexture",
+        "BottomRightTexture",
+        "LeftTexture",
+        "RightTexture",
+        "TopTexture",
+        "BottomTexture",
+    }
     for i = 1, n do
         local frame = _G["ChatFrame" .. i]
         local tab = _G["ChatFrame" .. i .. "Tab"]
@@ -12,6 +23,9 @@ function skin:Apply()
         if frame then
             ns.TintNineSlice(frame)
             ns.TintNamed(frame, "Background", ns.Color("bg"))
+            for p = 1, #parts do
+                ns.Tint(_G["ChatFrame" .. i .. parts[p]], chrome)
+            end
         end
         if tab then
             ns.TintFrameArt(tab, ns.Color("chrome"), 1)

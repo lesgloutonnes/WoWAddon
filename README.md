@@ -17,6 +17,7 @@ Skin de l’interface de base : chrome or, sceau sacré (croix pattée), palette
 | `/lumiere prot` | Palette Protection (argent) |
 | `/lumiere ret` | Palette Vindicte (or et cramoisi) |
 | `/lumiere auto` | Palette selon la spé |
+| `/lumiere debug` | Dump client / cadres (à coller si le skin ne se voit pas) |
 
 ## 2. ForeverKit — qualité de vie
 
