@@ -1,10 +1,29 @@
 local ADDON_NAME, ns = ...
 local L = ns.L
 
+local defaults = {
+    enabled = true,
+    variant = "auto",
+    unitFrames = true,
+    actionBars = true,
+    minimap = true,
+    chat = true,
+    tooltips = true,
+    castBars = true,
+    windows = true,
+    gryphons = true,
+    crest = true,
+    onlyPaladin = false,
+    splash = true,
+}
+
 local function Checkbox(category, key, name, desc)
     local defaultValue = LumiereUIDB[key]
     if defaultValue == nil then
-        defaultValue = false
+        defaultValue = defaults[key]
+        if defaultValue == nil then
+            defaultValue = false
+        end
     end
     local varType = (Settings.VarType and Settings.VarType.Boolean) or type(true)
     local setting = Settings.RegisterAddOnSetting(
