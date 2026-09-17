@@ -1,0 +1,39 @@
+## Interface: 16001, 120105, 120100, 120001
+## Title: ForeverKit
+## Title-frFR: ForeverKit
+## Notes: Quality-of-life pack for WoW: Forever beta (Camelot / 12.1.5).
+## Notes-frFR: Pack qualité de vie pour la beta WoW: Forever (Camelot / 12.1.5).
+## Author: lesgloutonnes
+## Version: 0.1.0
+## SavedVariables: ForeverKitDB
+## LoadSavedVariablesFirst: 1
+## DefaultState: enabled
+## AllowLoadGameType: camelot, mainline
+## Category: Miscellaneous
+## Category-frFR: Divers
+## IconTexture: Interface\Icons\INV_Misc_Map_01
+## AddonCompartmentFunc: ForeverKit_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: ForeverKit_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: ForeverKit_OnAddonCompartmentLeave
+## X-GameType: camelot
+## X-Website: https://github.com/lesgloutonnes/WoWAddon
+
+Core\Util.lua
+Core\Secrets.lua
+Core\Locale.lua
+ForeverKit.lua
+Modules\Diagnostics.lua
+Modules\Vendor.lua
+Modules\Map.lua
+Modules\Tooltip.lua
+Modules\Chat.lua
+Modules\Errors.lua
+Modules\Durability.lua
+Modules\Mail.lua
+Modules\XP.lua
+Modules\Minimap.lua
+Modules\Camera.lua
+Modules\Loot.lua
+Modules\Gold.lua
+Modules\Social.lua
+Settings.lua
