@@ -14,6 +14,13 @@ local function SkinCastBar(bar)
     ns.TintNamed(bar, "Spark", ns.Color("chromeHi"))
     ns.TintNamed(bar, "Flash", ns.Color("chromeHi"))
     ns.TintNineSlice(bar)
+    local name = bar.GetName and bar:GetName()
+    if name then
+        ns.Tint(_G[name .. "Border"], ns.Color("chrome"))
+        ns.Tint(_G[name .. "Flash"], ns.Color("chromeHi"))
+        ns.Tint(_G[name .. "Spark"], ns.Color("chromeHi"))
+        ns.Tint(_G[name .. "Text"], ns.Color("text"))
+    end
     if bar.Text and bar.Text.SetTextColor then
         bar.Text:SetTextColor(ns.Unpack("text"))
     end

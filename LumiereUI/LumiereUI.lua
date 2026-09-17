@@ -3,7 +3,7 @@ local L = ns.L
 
 local addon = {
     name = ADDON_NAME,
-    version = "0.2.0",
+    version = "0.2.1",
     skins = {},
     order = {},
 }
@@ -27,6 +27,7 @@ local defaults = {
     onlyPaladin = false,
     splash = true,
 }
+ns.defaults = defaults
 
 function addon:RegisterSkin(key, skin)
     skin.key = key
@@ -56,6 +57,8 @@ end
 
 function addon:Apply()
     ns.serial = (ns.serial or 0) + 1
+    ns.RestoreAll()
+    ns.HideLumiereOverlays()
     if not ns.SkinEnabled() then
         return
     end
@@ -100,6 +103,45 @@ function addon:SetVariant(variant)
     LumiereUIDB.variant = variant
     self:Apply()
     print("|cfff58cbaLumièreUI|r " .. L.VARIANT .. ": " .. variant)
+end
+
+function addon:Debug()
+    print("|cfff58cbaLumièreUI|r " .. (L.DEBUG_HEADER or "diagnostic"))
+    print("  version " .. tostring(self.version))
+    local version, build, buildDate, toc = "?", "?", "?", "?"
+    if GetBuildInfo then
+        version, build, buildDate, toc = GetBuildInfo()
+    end
+    print("  client " .. tostring(version) .. " build " .. tostring(build) .. " toc " .. tostring(toc))
+    print("  locale " .. tostring(GetLocale and GetLocale() or "?"))
+    print("  project " .. tostring(_G.WOW_PROJECT_ID or "?"))
+    print("  enabled " .. tostring(ns.SkinEnabled()) .. " variant " .. tostring(LumiereUIDB.variant))
+    print("  class " .. tostring(ns.SafeUnitClass and ns.SafeUnitClass("player") or "?"))
+    local names = {
+        "PlayerFrame",
+        "PlayerFrameTexture",
+        "TargetFrame",
+        "MainActionBar",
+        "MainMenuBar",
+        "MainMenuBarLeftEndCap",
+        "MainMenuBarRightEndCap",
+        "Minimap",
+        "MinimapBorder",
+        "MinimapCluster",
+        "SettingsPanel",
+        "CastingBarFrame",
+        "PlayerCastingBarFrame",
+    }
+    for i = 1, #names do
+        print("  " .. names[i] .. " = " .. ns.DumpExists(names[i]))
+    end
+    print("  media " .. ns.Media("Crest"))
+    if PlayerFrame and PlayerFrame.PlayerFrameContainer then
+        print("  PlayerFrameContainer = oui")
+    else
+        print("  PlayerFrameContainer = non")
+    end
+    print("  " .. (L.DEBUG_HINT or ""))
 end
 
 function addon:ShowSplash()
@@ -163,6 +205,9 @@ SlashCmdList.LUMIEREUI = function(msg)
         addon:SetVariant("auto")
     elseif msg == "apply" or msg == "reloadskin" then
         addon:Apply()
+        print("|cfff58cbaLumièreUI|r " .. (L.APPLIED or "skin mis à jour."))
+    elseif msg == "debug" then
+        addon:Debug()
     else
         addon:OpenSettings()
         print("|cfff58cbaLumièreUI|r " .. L.HELP)

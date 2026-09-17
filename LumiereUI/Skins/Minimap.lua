@@ -19,6 +19,18 @@ function skin:Apply()
     if MinimapBorderTop then
         ns.Tint(MinimapBorderTop, ns.Color("chrome"))
     end
+    if MiniMapTrackingBorder then
+        ns.Tint(MiniMapTrackingBorder, ns.Color("chrome"))
+    end
+    if MiniMapMailBorder then
+        ns.Tint(MiniMapMailBorder, ns.Color("chrome"))
+    end
+    if MiniMapBattlefieldBorder then
+        ns.Tint(MiniMapBattlefieldBorder, ns.Color("chrome"))
+    end
+    if MinimapZoneTextButton then
+        ns.TintFrameArt(MinimapZoneTextButton, ns.Color("chrome"), 1)
+    end
     if MinimapCluster then
         ns.TintNamed(MinimapCluster, "BorderTop", ns.Color("chrome"))
         ns.TintFrameArt(MinimapCluster, ns.Color("chrome"), 1)

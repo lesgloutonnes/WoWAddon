@@ -6,6 +6,8 @@ local skin = { setting = "actionBars" }
 local BAR_NAMES = {
     "MainActionBar",
     "MainMenuBar",
+    "MainMenuBarArtFrame",
+    "MainMenuBarArtFrameBackground",
     "MultiBarBottomLeft",
     "MultiBarBottomRight",
     "MultiBarRight",
@@ -15,15 +17,21 @@ local BAR_NAMES = {
     "MultiBar7",
     "MultiBar8",
     "StanceBar",
+    "StanceBarFrame",
+    "ShapeshiftBarFrame",
     "PetActionBar",
+    "PetActionBarFrame",
     "PossessActionBar",
+    "PossessBarFrame",
     "OverrideActionBar",
     "ExtraActionBar",
     "ZoneAbilityFrame",
+    "BonusActionBarFrame",
 }
 
 local BUTTON_PREFIXES = {
     "ActionButton",
+    "BonusActionButton",
     "MultiBarBottomLeftButton",
     "MultiBarBottomRightButton",
     "MultiBarRightButton",
@@ -33,8 +41,30 @@ local BUTTON_PREFIXES = {
     "MultiBar7Button",
     "MultiBar8Button",
     "StanceButton",
+    "ShapeshiftButton",
     "PetActionButton",
     "PossessButton",
+}
+
+local ART_TEXTURES = {
+    "MainMenuBarTexture0",
+    "MainMenuBarTexture1",
+    "MainMenuBarTexture2",
+    "MainMenuBarTexture3",
+    "MainMenuMaxLevelBar0",
+    "MainMenuMaxLevelBar1",
+    "MainMenuMaxLevelBar2",
+    "MainMenuMaxLevelBar3",
+    "MainMenuXPBarTexture0",
+    "MainMenuXPBarTexture1",
+    "MainMenuXPBarTexture2",
+    "MainMenuXPBarTexture3",
+    "ReputationWatchBarTexture0",
+    "ReputationWatchBarTexture1",
+    "ReputationWatchBarTexture2",
+    "ReputationWatchBarTexture3",
+    "MainMenuBarLeftEndCap",
+    "MainMenuBarRightEndCap",
 }
 
 local function SkinButton(btn)
@@ -55,6 +85,9 @@ local function SkinButton(btn)
     ns.TintNamed(btn, "Border", ns.Color("accent"))
     ns.TintNamed(btn, "IconMask", chrome)
     ns.TintNamed(btn, "Flash", ns.Color("accent"))
+    ns.TintNamed(btn, "NormalTexture", chrome)
+    ns.TintNamed(btn, "PushedTexture", ns.Color("chromeHi"))
+    ns.TintNamed(btn, "FloatingBG", ns.Color("bg"))
 
     if addon:Get("crest") ~= false then
         local overlay = ns.EnsureOverlay(btn, "LumiereBorder", "OVERLAY")
@@ -65,8 +98,22 @@ local function SkinButton(btn)
             overlay:SetDrawLayer("OVERLAY", 6)
         end
         overlay:Show()
-    elseif btn.LumiereBorder then
-        btn.LumiereBorder:Hide()
+    end
+end
+
+local function SkinEndCap(tex, hide)
+    if not tex then
+        return
+    end
+    if hide then
+        ns.SetAlpha(tex, 0)
+    else
+        if tex.LumiereOrigAlpha ~= nil then
+            ns.SetAlpha(tex, tex.LumiereOrigAlpha)
+        else
+            ns.SetAlpha(tex, 1)
+        end
+        ns.Tint(tex, ns.Color("chrome"))
     end
 end
 
@@ -76,19 +123,11 @@ local function SkinBar(bar)
     end
     ns.TintNamed(bar, "Background", ns.Color("bg"))
     ns.TintNamed(bar, "ActionBarBackground", ns.Color("bg"))
+    ns.TintFrameArt(bar, ns.Color("chrome"), 1)
     local endCaps = bar.EndCaps
     if endCaps then
-        if addon:Get("gryphons") then
-            if endCaps.LeftEndCap then
-                endCaps.LeftEndCap:SetAlpha(0)
-            end
-            if endCaps.RightEndCap then
-                endCaps.RightEndCap:SetAlpha(0)
-            end
-        else
-            ns.TintNamed(endCaps, "LeftEndCap", ns.Color("chrome"))
-            ns.TintNamed(endCaps, "RightEndCap", ns.Color("chrome"))
-        end
+        SkinEndCap(endCaps.LeftEndCap, addon:Get("gryphons"))
+        SkinEndCap(endCaps.RightEndCap, addon:Get("gryphons"))
     end
     if bar.GetChildren then
         local children = { bar:GetChildren() }
@@ -103,21 +142,15 @@ end
 
 local function PlaceCrest(parent, key, point, relPoint, x, y)
     if not parent or not addon:Get("crest") or not addon:Get("gryphons") then
-        if parent and parent[key] then
-            parent[key]:Hide()
-        end
         return
     end
-    local tex = parent[key]
-    if not tex then
-        tex = parent:CreateTexture(nil, "OVERLAY")
-        tex:SetSize(72, 72)
-        parent[key] = tex
-    end
+    local tex = ns.EnsureOverlay(parent, key, "OVERLAY")
+    tex:SetSize(72, 72)
     tex:SetTexture(ns.Media("Crest"))
     tex:ClearAllPoints()
     tex:SetPoint(point, parent, relPoint, x, y)
     tex:Show()
+    return tex
 end
 
 function skin:Apply()
@@ -129,12 +162,38 @@ function skin:Apply()
     end
     SkinButton(_G.ExtraActionButton1)
 
-    local main = MainActionBar or MainMenuBar
+    for i = 1, #ART_TEXTURES do
+        local tex = _G[ART_TEXTURES[i]]
+        if tex then
+            if (ART_TEXTURES[i] == "MainMenuBarLeftEndCap" or ART_TEXTURES[i] == "MainMenuBarRightEndCap") then
+                SkinEndCap(tex, addon:Get("gryphons"))
+            else
+                ns.Tint(tex, ns.Color("chrome"))
+            end
+        end
+    end
+
+    local main = MainActionBar or MainMenuBar or MainMenuBarArtFrame
     if main then
-        PlaceCrest(main, "LumiereCrestLeft", "RIGHT", "LEFT", 6, 12)
-        PlaceCrest(main, "LumiereCrestRight", "LEFT", "RIGHT", -6, 12)
-        if main.LumiereCrestRight then
-            main.LumiereCrestRight:SetTexCoord(1, 0, 0, 1)
+        local classicCaps = _G.MainMenuBarLeftEndCap or _G.MainMenuBarRightEndCap
+        if classicCaps then
+            local left = PlaceCrest(main, "LumiereCrestLeft", "LEFT", "LEFT", -28, 10)
+            local right = PlaceCrest(main, "LumiereCrestRight", "RIGHT", "RIGHT", 28, 10)
+            if right then
+                right:SetTexCoord(1, 0, 0, 1)
+            end
+            if left then
+                left:SetTexCoord(0, 1, 0, 1)
+            end
+        else
+            local left = PlaceCrest(main, "LumiereCrestLeft", "RIGHT", "LEFT", 6, 12)
+            local right = PlaceCrest(main, "LumiereCrestRight", "LEFT", "RIGHT", -6, 12)
+            if right then
+                right:SetTexCoord(1, 0, 0, 1)
+            end
+            if left then
+                left:SetTexCoord(0, 1, 0, 1)
+            end
         end
     end
 
@@ -153,6 +212,13 @@ function skin:Apply()
     end
     if StatusTrackingBarManager then
         ns.TintFrameArt(StatusTrackingBarManager, ns.Color("chrome"), 2)
+    end
+    if MainMenuExpBar then
+        ns.TintFrameArt(MainMenuExpBar, ns.Color("chrome"), 1)
+        ns.ColorBar(MainMenuExpBar, "health")
+    end
+    if ReputationWatchBar then
+        ns.TintFrameArt(ReputationWatchBar, ns.Color("chrome"), 1)
     end
 end
 

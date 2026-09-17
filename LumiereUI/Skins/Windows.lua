@@ -5,9 +5,15 @@ local skin = { setting = "windows" }
 
 local PANELS = {
     "CharacterFrame",
+    "PaperDollFrame",
+    "ReputationFrame",
+    "SkillFrame",
+    "HonorFrame",
+    "TokenFrame",
     "SpellBookFrame",
     "PlayerSpellsFrame",
     "QuestLogFrame",
+    "QuestLogDetailFrame",
     "QuestMapFrame",
     "WorldMapFrame",
     "FriendsFrame",
@@ -28,6 +34,10 @@ local PANELS = {
     "InspectFrame",
     "LootFrame",
     "GroupLootFrame1",
+    "WatchFrame",
+    "QuestWatchFrame",
+    "DurabilityFrame",
+    "MinimapCluster",
 }
 
 local function AddCorners(frame)
@@ -49,6 +59,7 @@ local function AddCorners(frame)
             tex:SetSize(size, size)
             tex:SetPoint(spec[1], frame, spec[1], spec[2], spec[3])
             tex:SetTexCoord(spec[4] and 1 or 0, spec[4] and 0 or 1, spec[5] and 1 or 0, spec[5] and 0 or 1)
+            ns.TrackOverlay(tex)
             frame.LumiereCornerTextures[#frame.LumiereCornerTextures + 1] = tex
         end
     end

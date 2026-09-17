@@ -1,6 +1,8 @@
 local ADDON_NAME, ns = ...
 
 ns.serial = 1
+ns.touched = {}
+ns.overlays = {}
 
 local SKIP_TYPES = {
     FontString = true,
@@ -62,7 +64,69 @@ function ns.Tint(tex, color)
         end
         tex.LumiereOrig = { r, g, b, a }
     end
+    ns.touched[tex] = true
     tex:SetVertexColor(color[1], color[2], color[3], color[4] or 1)
+end
+
+function ns.SetAlpha(region, alpha)
+    if not region or not region.SetAlpha then
+        return
+    end
+    if region.IsForbidden and region:IsForbidden() then
+        return
+    end
+    if region.LumiereOrigAlpha == nil and region.GetAlpha then
+        region.LumiereOrigAlpha = region:GetAlpha()
+    end
+    ns.touched[region] = true
+    region:SetAlpha(alpha)
+end
+
+function ns.Restore(region)
+    if not region then
+        return
+    end
+    if region.LumiereOrig and region.SetVertexColor then
+        local o = region.LumiereOrig
+        region:SetVertexColor(o[1], o[2], o[3], o[4] or 1)
+    end
+    if region.LumiereOrigBar and region.SetStatusBarColor then
+        local o = region.LumiereOrigBar
+        region:SetStatusBarColor(o[1], o[2], o[3], o[4] or 1)
+    end
+    if region.LumiereOrigAlpha ~= nil and region.SetAlpha then
+        region:SetAlpha(region.LumiereOrigAlpha)
+    end
+end
+
+function ns.RestoreAll()
+    for region in pairs(ns.touched) do
+        pcall(ns.Restore, region)
+    end
+end
+
+function ns.HideLumiereOverlays()
+    for i = 1, #ns.overlays do
+        local tex = ns.overlays[i]
+        if tex and tex.Hide then
+            tex:Hide()
+        end
+    end
+end
+
+function ns.TrackOverlay(tex)
+    if tex then
+        ns.overlays[#ns.overlays + 1] = tex
+    end
+    return tex
+end
+
+function ns.DumpExists(name)
+    local frame = _G[name]
+    if frame then
+        return "oui"
+    end
+    return "non"
 end
 
 function ns.TintNamed(parent, childName, color)
@@ -147,6 +211,11 @@ function ns.ColorBar(bar, key)
     if not bar or not bar.SetStatusBarColor then
         return
     end
+    if not bar.LumiereOrigBar and bar.GetStatusBarColor then
+        local r, g, b, a = bar:GetStatusBarColor()
+        bar.LumiereOrigBar = { r, g, b, a }
+    end
+    ns.touched[bar] = true
     bar:SetStatusBarColor(ns.Unpack(key or "health"))
 end
 
@@ -156,6 +225,7 @@ function ns.EnsureOverlay(parent, key, layer)
     end
     local tex = parent:CreateTexture(nil, layer or "OVERLAY")
     parent[key] = tex
+    ns.TrackOverlay(tex)
     return tex
 end
 
