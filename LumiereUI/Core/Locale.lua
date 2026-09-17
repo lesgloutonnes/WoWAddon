@@ -1,0 +1,94 @@
+local ADDON_NAME, ns = ...
+
+local locale = GetLocale and GetLocale() or "frFR"
+local L = {}
+ns.L = setmetatable(L, {
+    __index = function(_, key)
+        return key
+    end,
+})
+
+local fr = {
+    LOADED = "patte Paladin active. |cffffd200/lumiere|r pour les options.",
+    SPLASH = "Lumière",
+    SPLASH_SUB = "Patte Paladin",
+    HELP = "Commandes : |cffffd200/lumiere|r options · |cffffd200/lumiere holy|r · |cffffd200/lumiere prot|r · |cffffd200/lumiere ret|r · |cffffd200/lumiere auto|r",
+    COMPARTMENT = "Clic : options LumièreUI",
+    SETTINGS = "LumièreUI",
+    SETTINGS_INTRO = "Skin Paladin de l’interface de base. Aucune logique de combat — uniquement l’apparence.",
+    ENABLE = "Activer le skin",
+    ENABLE_DESC = "Applique le chrome or / sainteté sur l’UI Blizzard.",
+    VARIANT = "Palette",
+    VARIANT_DESC = "Sacré (or), Protection (argent), Vindicte (or et cramoisi), ou automatique selon la spé.",
+    VARIANT_AUTO = "Automatique (spé)",
+    VARIANT_HOLY = "Sacré",
+    VARIANT_PROT = "Protection",
+    VARIANT_RET = "Vindicte",
+    UNITFRAMES = "Portraits joueur / cible",
+    UNITFRAMES_DESC = "Teinte les cadres d’unité et colore la barre de vie du joueur.",
+    ACTIONBARS = "Barres d’actions",
+    ACTIONBARS_DESC = "Bordures or sur les boutons, gryphons remplacés par le sceau.",
+    MINIMAP = "Minimap",
+    MINIMAP_DESC = "Anneau d’or et sceau Paladin autour de la minimap.",
+    CHAT = "Fenêtres de chat",
+    CHAT_DESC = "Onglets et bordures du chat teintés.",
+    TOOLTIPS = "Infobulles",
+    TOOLTIPS_DESC = "Bordure or sur les tooltips.",
+    CASTBARS = "Barres d’incantation",
+    CASTBARS_DESC = "Barre de sort or / lumière.",
+    WINDOWS = "Fenêtres (sacs, persos, quêtes…)",
+    WINDOWS_DESC = "Teinte le chrome des panneaux Blizzard à l’ouverture.",
+    GRYPHONS = "Remplacer les gryphons",
+    GRYPHONS_DESC = "Cache les gryphons des barres et pose le sceau Paladin.",
+    CREST = "Afficher le sceau",
+    CREST_DESC = "Sceau sacré (croix pattée) sur la minimap et les barres.",
+    ONLY_PALADIN = "Seulement sur Paladin",
+    ONLY_PALADIN_DESC = "N’applique le skin que si le personnage est Paladin.",
+    SPLASH_OPT = "Écran d’accueil au login",
+    SPLASH_OPT_DESC = "Affiche brièvement le sceau au chargement.",
+}
+
+local en = {
+    LOADED = "Paladin skin active. |cffffd200/lumiere|r for options.",
+    SPLASH = "Lumière",
+    SPLASH_SUB = "Paladin skin",
+    HELP = "Commands: |cffffd200/lumiere|r options · |cffffd200/lumiere holy|r · |cffffd200/lumiere prot|r · |cffffd200/lumiere ret|r · |cffffd200/lumiere auto|r",
+    COMPARTMENT = "Click: LumiereUI options",
+    SETTINGS = "LumiereUI",
+    SETTINGS_INTRO = "Paladin skin for the default UI. No combat logic — appearance only.",
+    ENABLE = "Enable skin",
+    ENABLE_DESC = "Apply gold / holy chrome to the Blizzard UI.",
+    VARIANT = "Palette",
+    VARIANT_DESC = "Holy (gold), Protection (silver), Retribution (gold and crimson), or automatic from spec.",
+    VARIANT_AUTO = "Automatic (spec)",
+    VARIANT_HOLY = "Holy",
+    VARIANT_PROT = "Protection",
+    VARIANT_RET = "Retribution",
+    UNITFRAMES = "Player / target frames",
+    UNITFRAMES_DESC = "Tint unit frames and color the player health bar.",
+    ACTIONBARS = "Action bars",
+    ACTIONBARS_DESC = "Gold button borders; gryphons replaced by the seal.",
+    MINIMAP = "Minimap",
+    MINIMAP_DESC = "Gold ring and Paladin seal around the minimap.",
+    CHAT = "Chat windows",
+    CHAT_DESC = "Tint chat tabs and borders.",
+    TOOLTIPS = "Tooltips",
+    TOOLTIPS_DESC = "Gold tooltip border.",
+    CASTBARS = "Cast bars",
+    CASTBARS_DESC = "Holy gold casting bar.",
+    WINDOWS = "Panels (bags, character, quests…)",
+    WINDOWS_DESC = "Tint Blizzard panel chrome when opened.",
+    GRYPHONS = "Replace gryphons",
+    GRYPHONS_DESC = "Hide bar gryphons and show the Paladin seal.",
+    CREST = "Show the seal",
+    CREST_DESC = "Holy seal (cross pattée) on the minimap and bars.",
+    ONLY_PALADIN = "Paladin characters only",
+    ONLY_PALADIN_DESC = "Apply the skin only when the character is a Paladin.",
+    SPLASH_OPT = "Login splash",
+    SPLASH_OPT_DESC = "Briefly show the seal on load.",
+}
+
+local src = (locale == "frFR" or locale == "frCA") and fr or en
+for k, v in pairs(src) do
+    L[k] = v
+end

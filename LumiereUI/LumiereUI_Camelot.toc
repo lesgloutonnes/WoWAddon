@@ -1,0 +1,32 @@
+## Interface: 16001, 120105, 120100, 120001
+## Title: |cfff58cbaLumière|r|cffffd200UI|r
+## Title-frFR: |cfff58cbaLumière|r|cffffd200UI|r
+## Notes: Paladin skin for the default UI — gold chrome, holy seal, Holy/Prot/Ret palettes.
+## Notes-frFR: Patte Paladin sur l’UI de base — chrome or, sceau sacré, palettes Sacré / Prot / Vindicte.
+## Author: lesgloutonnes
+## Version: 0.2.0
+## SavedVariables: LumiereUIDB
+## LoadSavedVariablesFirst: 1
+## DefaultState: enabled
+## AllowLoadGameType: camelot, mainline
+## Category: Appearance
+## Category-frFR: Apparence
+## IconTexture: Interface\Icons\Spell_Holy_HolyBolt
+## AddonCompartmentFunc: LumiereUI_OnAddonCompartmentClick
+## AddonCompartmentFuncOnEnter: LumiereUI_OnAddonCompartmentEnter
+## AddonCompartmentFuncOnLeave: LumiereUI_OnAddonCompartmentLeave
+## X-Family: ForeverKit
+## X-Website: https://github.com/lesgloutonnes/WoWAddon
+
+Core\Locale.lua
+Core\Theme.lua
+Core\SkinUtil.lua
+LumiereUI.lua
+Skins\UnitFrames.lua
+Skins\ActionBars.lua
+Skins\Minimap.lua
+Skins\Chat.lua
+Skins\Tooltips.lua
+Skins\Casting.lua
+Skins\Windows.lua
+Settings.lua
