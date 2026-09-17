@@ -2,14 +2,21 @@
 
 Beta Forever : **17 septembre 2026** (après le Q&A 10:30 PDT), cap niveau **20** puis **30**. Client Mainline 12.1.5, game type **Camelot**, désarmement Midnight actif.
 
-## Phase 0 — Ce soir (livré)
+## Phase 0 — Ce soir
 
-Pack installable `ForeverKit` :
+Deux addons installables :
+
+### LumièreUI (prioritaire)
+
+- Patte Paladin sur l’UI Blizzard (or, sceau, palettes Sacré / Prot / Vindicte)
+- `/lumiere` pour les options
+- Apparence uniquement : pas de logique de combat
+
+### ForeverKit
 
 - Qualité de vie hors combat (vendeur, carte, tooltips, chat, durabilité, mail, XP, loot, or)
 - `/fk debug` pour verrouiller le vrai numéro TOC du client beta
 - Options natives, modules indépendants, FR / EN
-- Aucune logique de combat (secrets / AuraContainer)
 
 **À faire pendant la session :**
 
@@ -38,13 +45,11 @@ Dépend du dump `/fk debug` :
 - Groupe : prêt, rolls, marqueurs **manuels** uniquement
 - Accessibilité : plus gros textes, contrastes, click-cast si l’API le permet encore
 
-## Phase 3 — Présentation UI (pas de décision auto)
+## Phase 3 — Présentation UI (suite de LumièreUI)
 
-Uniquement ce que le UI de base affiche déjà, ré-habillé :
-
-- Barres d’actions (visuel, pas de rotation)
+- Affiner le skin selon le FrameXML réel de Forever
 - Nameplates / raid frames via **AuraContainer** (affichage, zéro branche Lua sur les auras secrètes)
-- Caméra / Edit Mode presets Forever
+- Presets Edit Mode Paladin
 
 ## Hors scope (API Midnight / Forever)
 
@@ -56,6 +61,6 @@ Uniquement ce que le UI de base affiche déjà, ré-habillé :
 
 ## Découpage repo (plus tard)
 
-Aujourd’hui : un seul addon modulaire, plus simple à coller dans `Interface/AddOns`.
+Aujourd’hui : `LumiereUI` (skin) + `ForeverKit` (QoL).
 
-Si le pack grossit : extraire `ForeverQuest`, `ForeverBags`, etc. avec `## Group: ForeverKit`.
+Si le pack grossit : extraire `ForeverQuest`, `ForeverBags`, etc. avec `## Group: LumiereUI`.

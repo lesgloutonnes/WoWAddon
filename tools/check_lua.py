@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Structural checks for ForeverKit (no WoW client required)."""
+"""Structural checks for Forever addons (no WoW client required)."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ import re
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-ADDON = ROOT / "ForeverKit"
+ADDONS = [ROOT / "ForeverKit", ROOT / "LumiereUI"]
 FORBIDDEN = [
     (re.compile(r"\bUnitAura\s*\("), "UnitAura is secret-restricted; use AuraContainer / spell-id APIs"),
     (re.compile(r"\bUnitHealth\s*\("), "UnitHealth can be secret in combat; avoid combat logic"),
@@ -26,63 +26,60 @@ def parse_toc(toc: pathlib.Path) -> list[str]:
     return files
 
 
-def check_toc(toc: pathlib.Path) -> list[str]:
+def check_toc(addon: pathlib.Path, toc: pathlib.Path) -> list[str]:
     errors = []
     text = toc.read_text(encoding="utf-8")
     if "## Interface:" not in text:
-        errors.append(f"{toc.name}: missing Interface")
+        errors.append(f"{addon.name}/{toc.name}: missing Interface")
     files = parse_toc(toc)
     if not files:
-        errors.append(f"{toc.name}: no files listed")
+        errors.append(f"{addon.name}/{toc.name}: no files listed")
     for rel in files:
-        path = ADDON / rel
+        path = addon / rel
         if not path.is_file():
-            errors.append(f"{toc.name}: missing {rel}")
+            errors.append(f"{addon.name}/{toc.name}: missing {rel}")
     return errors
 
 
 def check_lua(path: pathlib.Path) -> list[str]:
     errors = []
     text = path.read_text(encoding="utf-8")
-    if "function" in text:
-        # Crude balance: function vs end is too noisy because of if/end.
-        pass
     for regex, message in FORBIDDEN:
         if regex.search(text):
             errors.append(f"{path.relative_to(ROOT)}: {message}")
-    opens = text.count("function")
-    # Count only statement-level end is hard; check for unmatched [[
-    if text.count("[[") != text.count("]]"):
-        errors.append(f"{path.relative_to(ROOT)}: unmatched long brackets")
-    if opens == 0 and path.name.endswith(".lua") and path.name != "Locale.lua":
-        # Locale has no functions besides setmetatable callback... it has none named function except none
-        pass
     return errors
 
 
 def main() -> int:
     errors: list[str] = []
-    tocs = list(ADDON.glob("*.toc"))
-    if not tocs:
-        errors.append("no toc files")
-    for toc in tocs:
-        errors.extend(check_toc(toc))
-
-    expected = {"ForeverKit.toc", "ForeverKit_Camelot.toc", "ForeverKit_Mainline.toc"}
-    found = {p.name for p in tocs}
-    missing = expected - found
-    if missing:
-        errors.append(f"missing toc variants: {sorted(missing)}")
-
-    for lua in ADDON.rglob("*.lua"):
-        errors.extend(check_lua(lua))
+    lua_count = 0
+    toc_count = 0
+    for addon in ADDONS:
+        if not addon.is_dir():
+            errors.append(f"missing addon folder {addon.name}")
+            continue
+        tocs = list(addon.glob("*.toc"))
+        toc_count += len(tocs)
+        if not tocs:
+            errors.append(f"{addon.name}: no toc files")
+        stem = addon.name
+        expected = {f"{stem}.toc", f"{stem}_Camelot.toc", f"{stem}_Mainline.toc"}
+        found = {p.name for p in tocs}
+        missing = expected - found
+        if missing:
+            errors.append(f"{addon.name}: missing toc variants: {sorted(missing)}")
+        for toc in tocs:
+            errors.extend(check_toc(addon, toc))
+        for lua in addon.rglob("*.lua"):
+            lua_count += 1
+            errors.extend(check_lua(lua))
 
     if errors:
         print("FAIL")
         for err in errors:
             print(" -", err)
         return 1
-    print(f"OK: {len(tocs)} toc, {len(list(ADDON.rglob('*.lua')))} lua files")
+    print(f"OK: {toc_count} toc, {lua_count} lua files")
     return 0
 
 

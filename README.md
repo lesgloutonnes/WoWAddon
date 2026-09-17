@@ -1,70 +1,64 @@
-# WoWAddon — ForeverKit
+# WoWAddon — pack Forever
 
-Pack d’addons **qualité de vie** pour la beta **World of Warcraft: Forever** (17 septembre 2026).
+Addons pour la beta **World of Warcraft: Forever** (client Mainline 12.1.5, game type Camelot, désarmement Midnight).
 
-Forever tourne sur l’architecture UI Mainline (patch **12.1.5**), game type interne **Camelot**, avec le **désarmement d’addons Midnight** (valeurs secrètes, AuraContainer). Ce pack ne fait **aucune logique de combat** : pas de WeakAuras, pas de rotations, pas de marks auto.
+## 1. LumièreUI — patte Paladin (addon principal)
 
-## Installation (ce soir)
+Skin de l’interface de base : chrome or, sceau sacré (croix pattée), palettes **Sacré / Protection / Vindicte**.
 
-1. Dans le launcher Battle.net, sélectionner **WoW: Forever Beta** → icône d’engrenage → **Afficher dans l’explorateur**.
-2. Copier le dossier `ForeverKit` dans :
+- Cadres joueur / cible, barres d’actions, minimap, chat, tooltips, incantation, panneaux
+- Gryphons remplacés par le sceau Paladin
+- Aucune logique de combat (pas de lecture de PV/auras pour décider)
+
+| Commande | Action |
+| --- | --- |
+| `/lumiere` | Options |
+| `/lumiere holy` | Palette Sacré (or) |
+| `/lumiere prot` | Palette Protection (argent) |
+| `/lumiere ret` | Palette Vindicte (or et cramoisi) |
+| `/lumiere auto` | Palette selon la spé |
+
+## 2. ForeverKit — qualité de vie
+
+Réparation, coords, tooltips, chat, durabilité, mail, XP, loot, or. Voir le détail plus bas.
+
+## Installation
+
+1. Battle.net → **WoW: Forever Beta** → engrenage → **Afficher dans l’explorateur**.
+2. Copier **les deux dossiers** `LumiereUI` et `ForeverKit` dans :
 
 ```
-World of Warcraft\_forever_\Interface\AddOns\ForeverKit
+World of Warcraft\_forever_\Interface\AddOns\
 ```
 
-Si le dossier client s’appelle encore Camelot :
+(ou `_camelot_` si le dossier client s’appelle encore ainsi)
 
-```
-World of Warcraft\_camelot_\Interface\AddOns\ForeverKit
-```
+3. Chaque dossier doit contenir son `.toc` à la racine (`LumiereUI\LumiereUI.toc`).
+4. Relancer. Cocher les addons. S’ils sont « obsolètes » : charger les addons périmés, puis `/fk debug`.
 
-3. Le chemin final doit contenir `ForeverKit\ForeverKit.toc` (pas un dossier en trop).
-4. Relancer le client. À l’écran de sélection des personnages, bouton **AddOns** → cocher ForeverKit. Si « obsolète », cocher **Charger les addons périmés** et envoyer la sortie de `/fk debug`.
+---
 
-## Commandes
+### ForeverKit — commandes
 
 | Commande | Action |
 | --- | --- |
 | `/fk` | Aide |
-| `/fk options` | Réglages (Échap → Options → AddOns) |
-| `/fk debug` | Diagnostic client (TOC, build, carte, secrets) — **à coller après la 1re session** |
-| `/fk coords` | Coordonnées actuelles |
-| `/fk copy` | Copier le chat de la fenêtre 1 |
+| `/fk options` | Réglages |
+| `/fk debug` | Diagnostic client (TOC, build, carte) |
+| `/fk coords` | Coordonnées |
+| `/fk copy` | Copier le chat |
 | `/fk gold` | Or de la session |
 | `/fk reload` | Recharger l’UI |
 
-Le compartiment d’addons de la minimap ouvre aussi les options.
+### ForeverKit — modules
 
-## Modules (tous désactivables)
+Vendeur, carte, infobulles, chat, erreurs, durabilité, courrier, XP, minimap, caméra, butin, or. Social (auto-invit) **off** par défaut.
 
-| Module | Par défaut | Rôle |
-| --- | --- | --- |
-| Vendeur | on | Réparation auto, vente des gris |
-| Carte | on | Coordonnées carte + minimap |
-| Infobulles | on | Prix vendeur, ID d’objet (utile en beta) |
-| Chat | on | Horodatage, couleurs de classe, `/fk copy` |
-| Erreurs | on | Filtre mana/énergie/rage/CD |
-| Durabilité | on | % global + alerte < 25 % |
-| Courrier | on | Bouton « Tout prendre » (ignore les COD) |
-| XP | on | XP + bonus reposé |
-| Minimap | on | Zoom molette |
-| Caméra | on | Distance max |
-| Butin | on | Loot plus rapide si auto-loot |
-| Or | on | Gain/perte de session (`/fk gold`) |
-| Social | **off** | Auto-accept invits amis / guilde |
+## Compatibilité
 
-## Compatibilité API
-
-- TOC : `16001` (Forever Beta d’après Warcraft Wiki) **et** `120105` (Mainline 12.1.5)
-- Fichiers : `ForeverKit.toc`, `ForeverKit_Camelot.toc`, `ForeverKit_Mainline.toc`
-- APIs : `C_Item`, `C_Container`, `C_Map`, `Settings`, `TooltipDataProcessor`
-- Secrets : aucune branche sur PV, auras, ou identités d’unités en combat
-
-## Ce que ce pack ne fera pas
-
-Blizzard bloque les addons « computationnels » de combat sur Forever comme sur Midnight. Pas de WeakAuras, Hekili, marks auto, sync d’assignments, ni parse de fight.
+- TOC : `16001` (Forever Beta) et `120105` (Mainline 12.1.5)
+- Secrets Midnight : pas de WeakAuras, rotations, marks auto
 
 ## Plan
 
-Voir [ROADMAP.md](ROADMAP.md). Après ta première soirée : `/fk debug` + Lua errors → on ajuste le numéro d’interface et on priorise les modules suivants.
+[ROADMAP.md](ROADMAP.md) — après la 1re session, coller `/fk debug` pour caler le numéro d’interface.
